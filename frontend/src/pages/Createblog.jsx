@@ -1,16 +1,17 @@
-import React,{useState,useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { CloudCog } from 'lucide-react';
 
 export default function Createblog() {
 
-  let navigate=useNavigate();
+  let navigate = useNavigate();
 
-  useEffect(()=>{
-    if(!JSON.parse(localStorage.getItem("login"))){
+  useEffect(() => {
+    if (!JSON.parse(localStorage.getItem("login"))) {
       navigate("/account");
     }
-  },[]);
+  }, []);
 
   async function handlesubmit(e) {
     e.preventDefault();
@@ -19,9 +20,9 @@ export default function Createblog() {
       title: e.target.title.value,
       desc: e.target.desc.value,
       avatar: e.target.avatar.value,
-      uploadedBy: JSON.parse(localStorage.getItem("user"))._id
+      uploadedBy: JSON.parse(localStorage.getItem("user")).user._id
     };
-
+    console.log(data);
     try {
       let res = await axios.post(
         "http://localhost:5000/api/blog/createblog",
@@ -71,7 +72,7 @@ export default function Createblog() {
           focus:outline-none focus:ring-2 focus:ring-blue-400
           hover:border-blue-400 transition duration-200"
         />
- {/* Description */}
+        {/* Description */}
         <textarea
           placeholder="Enter description..."
           name="desc"

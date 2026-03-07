@@ -17,18 +17,19 @@
     async function handleLogin(e) {
       e.preventDefault();
       const email = e.target.email.value;
-
+      const password = e.target.password.value;
       try {
         const res = await axios.post(
           "http://localhost:5000/api/user/login",
-          { email }
+          { email, password }
         );
-
-        if (res.data.err) {
+      
+        if (res.data.err){
           alert(res.data.err);
           return;
         }
-
+        e.target.reset();
+        alert("Login Successful!");
         localStorage.setItem("user", JSON.stringify(res.data));
         localStorage.setItem("login", JSON.stringify(true));
         navigate("/profile");
@@ -37,10 +38,9 @@
       }
     }
 
-    async function handleSignup(e) {
-      e.preventDefault();
-
-      let data = {
+    async function handleSignup(e){
+        e.preventDefault();
+        let data = {
         name: e.target.name.value,
         email: e.target.email.value,
         password: e.target.password.value,
@@ -48,16 +48,25 @@
       };
 
       try {
-        await axios.post(
+        let res = await axios.post(
           "http://localhost:5000/api/user/createuser",
           data
         );
+         e.target.reset();
         alert("Signup Successful!");
-        e.target.reset();
         setTab("login");
+        console.log(res.data)
+        if (!res.data.user)
+           {
+              alert("Signup failed");
+              return;
+             }
+        localStorage.setItem("login", JSON.stringify(true));
+        localStorage.setItem("user", JSON.stringify(res.data));
+        navigate("/profile");
       } catch {
         alert("Server Error!!!");
-      }
+      } 
     }
 
     return (
@@ -117,7 +126,7 @@
                     required
                     className="px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-400 focus:outline-none transition duration-300"
                   />
-
+                  <input type="text" name="password" placeholder="Enter your password" required className="px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-400 focus:outline-none transition duration-300"/>
                   <button
                     type="submit"
                     className="bg-indigo-500 text-white py-3 rounded-xl font-semibold hover:bg-indigo-600 hover:scale-105 transition duration-300 shadow-md"

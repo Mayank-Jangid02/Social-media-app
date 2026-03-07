@@ -1,33 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 export default function Edit() {
 
-  async function handlesubmit(e){
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) {
+      navigate("/account");
+    }
+  }, [])
+  let navigate = useNavigate();
+
+  async function handlesubmit(e) {
+
     e.preventDefault();
 
-    let data={
-      name:e.target.name.value,
-      avatar:e.target.avatar.value
+    let data = {
+      name: e.target.name.value,
+      avatar: e.target.avatar.value
     }
-   e.target.reset();
-    const id=JSON.parse(localStorage.getItem("user"))._id;
+    e.target.reset();
+    const id = JSON.parse(localStorage.getItem("user"))._id;
 
-    try{
+    try {
       console.log("data is to be sent")
-      let res= await axios.put(
+
+      const user = JSON.parse(localStorage.getItem("user"));
+      console.log("User from storage:", user);
+      const id = user.user._id;
+      console.log("ID:", id);
+
+
+
+
+      let res = await axios.patch(
         `http://localhost:5000/api/user/updateuser/${id}`,
         data
       );
       console.log("data sent")
       console.log(res.data);
 
-      localStorage.setItem("user",JSON.stringify(res.data.user));
-
-      alert(res.data.message);
-
+      localStorage.setItem("user", JSON.stringify(res.data.user));
       e.target.reset();
-
-    }catch(error){
+      navigate("/profile");
+      alert(res.data.message);
+    } catch (error) {
       console.log(error);
       alert(error)
     }
