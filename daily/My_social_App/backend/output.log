@@ -1,0 +1,30 @@
+--- STARTING API TESTS ---
+
+[1] Testing User APIs...
+-> POST /user/register
+   Status: 201
+-> POST /user/login
+   Status: 200
+-> GET /user/getalluser
+   Status: 200
+-> GET /user/getuser/69b0046eaa1f8969c773cc4e
+   Status: 200
+-> PUT /user/updateuser/69b0046eaa1f8969c773cc4e
+   Status: 200
+
+[2] Testing Post APIs...
+-> POST /post/createpost
+   Status: 201
+-> GET /post/getallpost
+   Status: 200
+-> GET /post/getpost/69b0046eaa1f8969c773cc54
+   Status: 200
+-> PUT /post/updatepost/69b0046eaa1f8969c773cc54
+   Status: 200
+-> DELETE /post/deletepost/69b0046eaa1f8969c773cc54
+   Status: 200
+
+[3] Cleanup: DELETE test user 69b0046eaa1f8969c773cc4e
+   Status: 200
+
+--- API TESTS FINISHED ---
