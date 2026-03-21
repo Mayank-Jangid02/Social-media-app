@@ -1,0 +1,12 @@
+import { Router } from "express";
+import { getuser, createuser,getuserbyid ,loginuser,updateuser,deleteuser} from "../controllers/user.controller.js";    
+import { set } from "mongoose";
+import authmidleware from "../middleware/authmiddleware.js";
+let router = Router();
+router.get("/getuser",authmidleware,getuser);
+router.post("/createuser",createuser);
+router.get("/getuserbyid/:id",getuserbyid);
+router.post('/login',loginuser);
+router.patch('/updateuser/:id',updateuser);
+router.delete('/deleteuser/:id',deleteuser);
+export default router;
