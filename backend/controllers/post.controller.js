@@ -2,7 +2,7 @@ import Post from "../models/post.model.js";
 
 export async function getAllPost(req, res) {
     try {
-        const posts = await Post.find();
+        const posts = (await Post.find().populate("uploadedBy")).sort({createdAt: -1});
         res.status(200).json(posts);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -11,7 +11,6 @@ export async function getAllPost(req, res) {
 
 export async function createPost(req, res) {
     try {
-
         const newpost = await Post.create(req.body);
         res.status(201).json(newpost);
     } catch (error) {
