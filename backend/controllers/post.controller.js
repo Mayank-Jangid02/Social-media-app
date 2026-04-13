@@ -2,7 +2,7 @@ import Post from "../models/post.model.js";
 
 export async function getAllPost(req, res) {
     try {
-        const posts = (await Post.find().populate("uploadedBy")).sort({createdAt: -1});
+        const posts = await Post.find().populate("uploadedBy").populate("comments.commentedBy").populate("likes.likedBy").sort({ createdAt: -1 });
         res.status(200).json(posts);
     } catch (error) {
         res.status(500).json({ message: error.message });
