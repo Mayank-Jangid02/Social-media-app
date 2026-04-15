@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import {ThumbsUp,MessageCircleMore} from 'lucide-react'
 import axios from 'axios'
 
 export default function Feed() {
@@ -11,7 +12,6 @@ export default function Feed() {
     if (!userlogin) {
       navigate('/login');
     }
-
     async function fetchPosts() {
       try {
         const res = await axios.get('http://localhost:5000/api/post/getallpost');
@@ -24,7 +24,12 @@ export default function Feed() {
 
     fetchPosts();
   }, [navigate]);
-
+  function handlelike(postId){
+      alert("Liked post with ID: " + postId);
+    }
+    function handlecomment(postId){
+      alert("Comment on post with ID: " + postId);
+    }
   function handleCreatePost(e) {
     e.preventDefault();
     navigate('/createpost');
@@ -57,6 +62,10 @@ export default function Feed() {
                     {new Date(post.createdAt).toLocaleString()}
                   </p>
                 </div>  
+                <div className="ml-auto flex items-center gap-4">
+                <button onClick={()=>{ handlelike(post._id )}}><ThumbsUp className='text-gray-500 cursor-pointer hover:text-blue-500 transition duration-300' size={30}/></button>
+                <button  onClick={()=>{ handlecomment(post._id)}}><MessageCircleMore className='text-gray-500 cursor-pointer hover:text-blue-500 transition duration-300' size={30}/></button>
+                </div>
               </div>
 
               {/* Image */}
