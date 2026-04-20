@@ -37,7 +37,7 @@ export async function updatePost(req, res) {
         let post = await Post.findByIdAndUpdate(id, req.body, { new: true });
         if (post) {
             res.status(200).json(post);
-        } else {
+        }else {
             res.status(404).json({ message: "Post not found" });
         }
     } catch (error) {
@@ -58,19 +58,24 @@ export async function deletePost(req, res) {
     }
 }
 
-export async function likepost(req,res){
+export async function togglelike(req,res){
     try {
         const {id} = req.params;
         const post = await Post.findById(id);
         if (post) {
-            post.likes.push(req.body); 
+            const liked=post.likes.find((like)=>like.likedBy.toString()===req.body.likedBy);
+            if(liked){
+                post.likes.pull(liked);
+            }else{
+                post.likes.push(req.body);
+            }
             await post.save();
             res.status(200).json(post);
         } else {
             res.status(404).json({ message: "Post not found" });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message }); 
     }
 }
 
@@ -108,27 +113,10 @@ export async function deletecomment(req,res)
     }
 }
 
-export async function deleteLike(req,res)
-{
-    try{
-       const {id}=req.params;
-       const post=  await Post.findById(id);
-       if(post){
-        post.likes.pull(req.body);
-        await post.save();
-        res.status(200).json(post);
-       }else{
-        res.status(404).json({ message: "Post not found" });
-       }
-    }catch(error){
-        res.status(500).json({ message: error.message });
-    }
-}
-
 export async function getallLike(req,res) {
     try{
      const {id}=req.params;
-     const post=await Post.findById(id);
+     const post=await Post.findById(id).populate("likes.likedBy");
      if(post){
         res.status(200).json(post.likes);
      }else{

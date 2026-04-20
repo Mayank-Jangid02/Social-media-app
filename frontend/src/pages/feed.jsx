@@ -6,16 +6,19 @@ import axios from 'axios'
 export default function Feed() {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
-
+  const [postliked, setpostliked] = useState([]);
+  const [userdata, setuserdata] = useState(null);
   useEffect(() => {
     const userlogin = localStorage.getItem('userlogin');
     if (!userlogin) {
       navigate('/login');
     }
+    setuserdata(JSON.parse(localStorage.getItem('userdetails')));
     async function fetchPosts() {
       try {
         const res = await axios.get('http://localhost:5000/api/post/getallpost');
         setPosts(res.data);
+        setpostliked(res.data.likes.some((like)=>like.likedBy.toString()===userdata.user._id));
       } catch (err) {
         alert(err?.response?.data?.message || "Failed to fetch posts");
         console.log(err);
@@ -24,8 +27,15 @@ export default function Feed() {
 
     fetchPosts();
   }, [navigate]);
-  function handlelike(postId){
-      alert("Liked post with ID: " + postId);
+ async function handlelike(postId){
+    try{
+      const res=await axios.post(`http://localhost:5000/api/post/togglelike/${postId}`, { likedBy: userdata.user._id });
+      alert(res?.data?.message || "Liked post successfully");
+    }catch(err){
+      alert(err?.response?.data?.message || "Failed to like post");
+      console.log(err);
+     }
+      
     }
     function handlecomment(postId){
       alert("Comment on post with ID: " + postId);

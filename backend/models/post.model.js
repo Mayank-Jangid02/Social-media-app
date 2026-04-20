@@ -24,7 +24,7 @@ const likeSchema = new mongoose.Schema({
     }
 },{
     timestamps: true
-});
+})  ;
 const postSchema = new mongoose.Schema({
     image:{
         type: String,
